@@ -1,7 +1,7 @@
 package search;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class SearchEngine {
 
@@ -11,9 +11,16 @@ public class SearchEngine {
         this.word = word;
     }
 
-    protected int searchWord(String sentence) {
+    protected List<Integer> searchWord(String[] phoneBook) {
 
-        List<String> words = List.of(sentence.split(" "));
-        return words.indexOf(word);
+        List<Integer> foundIndexes = new ArrayList<>();
+
+        for (int i = 0; i < phoneBook.length; i++) {
+
+            if (phoneBook[i].toLowerCase().contains(word.toLowerCase())) {
+                foundIndexes.add(i);
+            }
+        }
+        return foundIndexes;
     }
 }
