@@ -1,6 +1,5 @@
 package search;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -77,8 +76,9 @@ public class SearchEngineApp {
     }*/
 
     private static void findAPerson(String[] phoneBookEntries) {
+        scanner.nextLine();
         System.out.println("\nEnter a name or email to search all suitable people.");
-        String searchQuery = scanner.next();
+        String searchQuery = scanner.nextLine();
         display(searchPhoneBook(phoneBookEntries, searchQuery),
                 phoneBookEntries);
     }
