@@ -1,5 +1,6 @@
 package search;
 
+import java.io.File;
 import java.util.List;
 import java.util.Scanner;
 
@@ -8,9 +9,10 @@ public class SearchEngineApp {
     private static final Scanner scanner =
             new Scanner(System.in);
 
-    static void runApp() {
+    static void runApp(String inpCommand) {
 
-        PhoneBook phoneBook = getPhoneBook();
+
+        PhoneBook phoneBook = new PhoneBook(new File(inpCommand));
         phoneBook.loadPhoneBook();
 
         runChoice(phoneBook.getEntries());
@@ -19,15 +21,10 @@ public class SearchEngineApp {
 
     }
 
-    private static PhoneBook getPhoneBook() {
-        int numOfPeople = getNum("people");
-        return new PhoneBook(numOfPeople);
-    }
-
-    private static int getNum(String detailsNeeded) {
+    /*private static int getNum(String detailsNeeded) {
         System.out.printf("%nEnter the number of %s:%n", detailsNeeded);
         return scanner.nextInt();
-    }
+    }*/
 
     private static void runChoice(String[] phoneBookEntries) {
 
