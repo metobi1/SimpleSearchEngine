@@ -1,5 +1,6 @@
 package search;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -13,7 +14,9 @@ public class SearchEngineApp {
         PhoneBook phoneBook = getPhoneBook();
         phoneBook.loadPhoneBook();
 
-        searchForPeople(phoneBook.getEntries());
+        runChoice(phoneBook.getEntries());
+
+        //searchForPeople(phoneBook.getEntries());
 
     }
 
@@ -27,18 +30,60 @@ public class SearchEngineApp {
         return scanner.nextInt();
     }
 
-    private static void searchForPeople(String[] phoneBookEntries) {
+    private static void runChoice(String[] phoneBookEntries) {
+
+        boolean exit = false;
+
+        while (!exit) {
+            int choice = getChoice();
+            switch (choice) {
+                case 1:
+                    findAPerson(phoneBookEntries);
+                    break;
+                case 2:
+                    display(phoneBookEntries);
+                    break;
+                case 0:
+                    System.out.println("\nBye!");
+                    exit = true;
+                    break;
+                default:
+                    System.out.println("\nIncorrect option! Try again.");
+            }
+        }
+    }
+
+    private static int getChoice() {
+            displayMenu();
+            return scanner.nextInt();
+    }
+
+    private static void displayMenu() {
+        System.out.println("\n=== Menu ===");
+        System.out.println("1. Find a person");
+        System.out.println("2. Print all people");
+        System.out.println("0. Exit");
+    }
+
+    /*private static void searchForPeople(String[] phoneBookEntries) {
 
         int numOfSearches = getNum("search queries");
 
         for (int i = 0; i < numOfSearches; i++) {
-            System.out.println("%nEnter data to search people:");
+            System.out.println("\nEnter data to search people:");
             String searchQuery = scanner.next();
             display(searchPerson(phoneBookEntries, searchQuery), phoneBookEntries);
         }
+    }*/
+
+    private static void findAPerson(String[] phoneBookEntries) {
+        System.out.println("\nEnter a name or email to search all suitable people.");
+        String searchQuery = scanner.next();
+        display(searchPhoneBook(phoneBookEntries, searchQuery),
+                phoneBookEntries);
     }
 
-    private static List<Integer> searchPerson(String[] phoneBook, String person) {
+    private static List<Integer> searchPhoneBook(String[] phoneBook, String person) {
 
         SearchEngine searchEngine = new SearchEngine(person);
         return searchEngine.searchWord(phoneBook);
@@ -48,10 +93,14 @@ public class SearchEngineApp {
         if (foundEntries.size() == 0) {
             System.out.println("No matching people found.");
         } else {
-            System.out.println("%nFound people:");
+            //System.out.println("\nFound people:");
             for (Integer entry : foundEntries) {
                 System.out.println(phoneBookEntries[entry]);
             }
         }
+    }
+    private static void display(String[] phoneBookEntries) {
+        System.out.println("\n=== List of people ===");
+        for (String entry : phoneBookEntries) System.out.println(entry);
     }
 }
