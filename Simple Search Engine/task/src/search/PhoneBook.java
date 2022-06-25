@@ -7,12 +7,14 @@ import java.util.Scanner;
 public class PhoneBook {
 
     private String[] phoneBook;
+    // chose five just cause
+    private static final int FIVE = 5;
     private final File file;
 
     protected PhoneBook(File file) {
 
         this.file = file;
-        phoneBook = new String[5];
+        phoneBook = new String[FIVE];
     }
 
     protected String[] getEntries() {
