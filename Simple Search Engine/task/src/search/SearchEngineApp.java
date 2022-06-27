@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.List;
 import java.util.Scanner;
 
+import static search.Print.*;
+
 public class SearchEngineApp {
 
     private static final Scanner scanner =
@@ -11,21 +13,12 @@ public class SearchEngineApp {
 
     static void runApp(String inpCommand) {
 
-
         PhoneBook phoneBook = new PhoneBook(new File(inpCommand));
         phoneBook.loadPhoneBook();
         SearchEngine searchEngine = getSearchEngine(phoneBook.getEntries());
 
         runChoice(searchEngine, phoneBook.getEntries());
-
-        //searchForPeople(phoneBook.getEntries());
-
     }
-
-    /*private static int getNum(String detailsNeeded) {
-        System.out.printf("%nEnter the number of %s:%n", detailsNeeded);
-        return scanner.nextInt();
-    }*/
 
     private static void runChoice(SearchEngine searchEngine, String[] phoneBookEntries) {
 
@@ -41,11 +34,11 @@ public class SearchEngineApp {
                     display(phoneBookEntries);
                     break;
                 case 0:
-                    System.out.println("\nBye!");
+                    displayGreetingMsg();
                     exit = true;
                     break;
                 default:
-                    System.out.println("\nIncorrect option! Try again.");
+                    displayErrorMsg();
             }
         }
     }
@@ -55,54 +48,55 @@ public class SearchEngineApp {
             return scanner.nextInt();
     }
 
-    private static void displayMenu() {
-        System.out.println("\n=== Menu ===");
-        System.out.println("1. Find a person");
-        System.out.println("2. Print all people");
-        System.out.println("0. Exit");
+    private static void findAPerson(SearchEngine searchEngine, String[] phoneBookEntries) {
+
+        displayStrategyMenuMsg();
+        String input = scanner.next();
+
+        if (wrongInput(input)) {
+            return;
+        }
+
+        scanner.nextLine();
+        displaySearchParam();
+        String searchQuery = scanner.nextLine();
+        SearchStrategy selectedStrategy = selectedStrategy(input);
+
+        display(searchEngine.searchStrategy(selectedStrategy, searchQuery),
+                phoneBookEntries);
     }
 
-    /*private static void searchForPeople(String[] phoneBookEntries) {
+    private static boolean wrongInput(String input) {
+        return !input.equals("ALL") && !input.equals("ANY") && !input.equals("NONE");
+    }
 
-        int numOfSearches = getNum("search queries");
-
-        for (int i = 0; i < numOfSearches; i++) {
-            System.out.println("\nEnter data to search people:");
-            String searchQuery = scanner.next();
-            display(searchPerson(phoneBookEntries, searchQuery), phoneBookEntries);
+    private static SearchStrategy selectedStrategy(String selectedStrategy) {
+        if ("ALL".equals(selectedStrategy)) {
+            return new SearchAll();
+        } else if ("ANY".equals(selectedStrategy)) {
+            return new SearchAny();
+        } else if ("NONE".equals(selectedStrategy)) {
+            return new SearchNone();
         }
-    }*/
-
-    private static void findAPerson(SearchEngine searchEngine, String[] phoneBookEntries) {
-        scanner.nextLine();
-        System.out.println("\nEnter a name or email to search all suitable people.");
-        String searchQuery = scanner.nextLine();
-        display(searchEngine.searchWord(searchQuery),
-                phoneBookEntries);
+        return null;
     }
 
     private static SearchEngine getSearchEngine(String[] phoneBook) {
         return new SearchEngine(phoneBook);
     }
 
-    /*private static List<Integer> searchPhoneBook(String[] phoneBook, String person) {
-
-        SearchEngine searchEngine = new SearchEngine(person);
-        return searchEngine.searchWord(phoneBook);
-    }*/
-
     private static void display(List<Integer> foundEntries, String[] phoneBookEntries) {
         if (foundEntries.size() == 0) {
-            System.out.println("No matching people found.");
+            displayNotFoundMsg();
         } else {
-            System.out.printf("%d persons found:%n", foundEntries.size());
+            displayFoundMsg(foundEntries.size());
             for (Integer entry : foundEntries) {
-                System.out.println(phoneBookEntries[entry]);
+                displayFoundEntry(phoneBookEntries[entry]);
             }
         }
     }
     private static void display(String[] phoneBookEntries) {
-        System.out.println("\n=== List of people ===");
-        for (String entry : phoneBookEntries) System.out.println(entry);
+        displayHeading();
+        for (String entry : phoneBookEntries) displayFoundEntry(entry);
     }
 }
